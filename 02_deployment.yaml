@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: kubernetes-event-exporter
+  name: event-exporter
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: event-exporter
+        version: v1
+    spec:
+      serviceAccountName: event-exporter
+      containers:
+        - name: event-exporter
+          image: bitnami/kubernetes-event-exporter:0.11.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - -conf=/data/config.yaml
+          volumeMounts:
+            - mountPath: /data
+              name: cfg
+              readOnly: true
+      volumes:
+#kdr        - name: cfg
+#kdr          configMap:
+#kdr            name: event-exporter-cfg
+        - name: cfg
+          secret:
+            secretName: event-exporter-cfg
+  selector:
+    matchLabels:
+      app: event-exporter
+      version: v1

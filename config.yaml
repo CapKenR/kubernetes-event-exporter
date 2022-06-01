@@ -1,0 +1,17 @@
+route:
+  routes:
+    - match:
+        - receiver: stdout
+receivers:
+  - name: "elasticsearch"
+    elasticsearch:
+      hosts:
+        - http://localhost:9200
+      index: kube-events
+      indexFormat: "kube-events-{2006-01-02}"
+      username: # optional
+      password: # optional
+      useEventID: true
+      deDot: false
+  - name: "stdout"
+    stdout: { }
